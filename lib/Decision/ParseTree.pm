@@ -12,21 +12,21 @@ Decision::ParseTree - Replacing waterfall IF-ELSIF-ELSE blocks
 
 =head1 VERSION
 
-Version 0.01
+Version 0.04
 
 =cut
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 =head1 SYNOPSIS
 
-Death to long if-elsif-else blocks that are  hard to maintain, and hard to 
+Death to long if-elsif-else blocks that are hard to maintain, and hard to 
 explain to your manager. Heres an overly simplistic example:
 
 =head2 OLD CODE
 
    if ( $obj->is_numeric ) {
-      if ( $obj->is_positve ) {
+      if ( $obj->is_positive ) {
          print 'Positive Number';
       } 
       elsif ( $obj->is_negative ) 
@@ -54,7 +54,6 @@ explain to your manager. Heres an overly simplistic example:
    ...
 
 
-
 =head3 Rules Object
 
    package Rules;
@@ -75,7 +74,7 @@ explain to your manager. Heres an overly simplistic example:
       return ($obj->{value} < 0 ) ? 1 : 0; 
    }
 
-=head3 Object to be passed
+=head3 Goal Object to be passed thru the rules
 
    package Number;
    
@@ -86,7 +85,19 @@ explain to your manager. Heres an overly simplistic example:
       return bless $self, $class;
    }
    
+=head3 Replacement to that if-else block
+
+   use Decision::ParseTree q{ParseTree};
+
+   my $rules = Rules->new;
+   my $tree  = LoadFile('tree.yaml');
    
+   print ParseTree( $tree, $rules, Number->new(10) ); # Positive Number
+   print ParseTree( $tree, $rules, Number->new(-1) ); # Negative Number
+   print ParseTree( $tree, $rules, Number->new(0)  ); # Looks like zero
+   print ParseTree( $tree, $rules, Number->new('a')); # Non-Numeric Value
+
+
 
 
 =head1 DESCRIPTION
@@ -156,19 +167,29 @@ bits, sadly I can't think of a good example. Ideas?
 
 =over
 
-=item * if you have $obj->{parse_path} then every step that this obj takes thru
-the rules then every rule name and returned value are stored as an array of hashes
+=item * If $obj->{parse_path} exists then every step that this obj takes thru
+the rules will be tracked. This path will be stored as an array ref, of hash refs. 
 
-=item * if you have $obj->{parse_answer} then the result will also be stored here
-as well as being returned from ParseTree.
+   $obj = Number->new(10);
+   ParseTree( $tree, $rules, $obj );
+   # $obj->{parse_path} will now look like :
+   #   [  { 'is_num' => 1 },
+   #      { 'is_pos' => 1 },
+   #   ]
+
+=item * If $obj->{parse_answer} exists then, when an answer is found, then it
+gets stored here as well as being returned.
+
+  print $obj->{parse_answer}; # Positive Number
 
 =back
 
 =back
 
-=head1 EXPORT
+=head1 EXPORT OK-able
 
-ParseTree is the only thing that gets exported, it's also the only thing here. 
+ParseTree is the only thing that can get exported, it's also the only thing in
+here, so export away.
 
 =head1 FUNCTIONS
 
@@ -270,8 +291,6 @@ sub ParseTree {
 
 =item * Currently $tree is expected to be a pre-parsed YAML File, This should 
 change here soon to also accept a filename. Currently though it does not.
-
-=item * no mention of the tracking and storeing bits.
 
 =item * need better examples.
 
