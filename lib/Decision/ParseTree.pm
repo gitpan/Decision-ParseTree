@@ -12,11 +12,11 @@ Decision::ParseTree - Replacing waterfall IF-ELSIF-ELSE blocks
 
 =head1 VERSION
 
-Version 0.04
+Version 0.041
 
 =cut
 
-our $VERSION = '0.04';
+our $VERSION = '0.041';
 
 =head1 SYNOPSIS
 
@@ -159,6 +159,16 @@ so you have an object that gets passed thru to make this all work. Tada!
 It would be nice to whip up a big example here to show all the interesting
 bits, sadly I can't think of a good example. Ideas?
 
+=over
+
+=item * Selecting a tests to run for hardware
+
+=item * Building settings/configuration files on the fly for varried hardware.
+
+=item * Would any one like to use this to write up a GO AI engine? Chess?
+
+=back
+
 =head1 FEATURES
 
 =over
@@ -292,7 +302,7 @@ sub ParseTree {
 =item * Currently $tree is expected to be a pre-parsed YAML File, This should 
 change here soon to also accept a filename. Currently though it does not.
 
-=item * need better examples.
+=item * would like even more examples.
 
 =item * need to flush out the docs more.
 

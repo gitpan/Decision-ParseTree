@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                Decision-ParseTree
-version:             0.04
+version:             0.041
 abstract:            Replacing waterfall IF-ELSIF-ELSE blocks
 license:             ~
 generated_by:        ExtUtils::MakeMaker version 6.36
